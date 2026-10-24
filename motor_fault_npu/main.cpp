@@ -1,7 +1,11 @@
 #include "board_init.h"
 #include "fsl_debug_console.h"
 #include "model.h"
+#include "test_vectors.h"
 #include "timer.h"
+
+#include <cstdint>
+#include <cstring>
 
 int main(void)
 {
@@ -44,70 +48,73 @@ int main(void)
 
     PRINTF("\r\n");
 
-    /*
-     * TEST INPUT
-     *
-     * Model expects 513 INT8 samples.
-     *
-     * For now use the quantized zero-point value.
-     * zero_point = -78
-     *
-     * IMPORTANT:
-     * We write directly into the INT8 tensor.
-     * Therefore we do NOT call MODEL_ConvertInput().
-     */
     int8_t *input = reinterpret_cast<int8_t *>(inputData);
-
-    for (int i = 0; i < 513; i++)
-    {
-        input[i] = -78;
-    }
-
-    uint32_t startTime = TIMER_GetTimeInUS();
-
-    if (MODEL_RunInference() != kStatus_Success)
-    {
-        PRINTF("ERROR: Inference failed\r\n");
-        while (1) {}
-    }
-
-    uint32_t endTime = TIMER_GetTimeInUS();
-
-    PRINTF("Inference time: %lu us\r\n",
-           (unsigned long)(endTime - startTime));
-
     int8_t *output = reinterpret_cast<int8_t *>(outputData);
+    uint32_t minLatency = 0xffffffffu;
+    uint32_t maxLatency = 0;
+    uint64_t totalLatency = 0;
+    uint32_t argmaxMatches = 0;
+    uint32_t labelMatches = 0;
+    int maxAbsDiff = 0;
 
-    PRINTF("Raw output: ");
-
-    for (int i = 0; i < 4; i++)
+    PRINTF("Classes: Normal=0 IR=1 OR=2 B=3\r\n");
+    for (uint32_t vectorIndex = 0; vectorIndex < NUM_TEST_VECTORS; vectorIndex++)
     {
-        PRINTF("%d ", output[i]);
+        memcpy(input, test_inputs[vectorIndex], NUM_BINS * sizeof(int8_t));
+        uint32_t startTime = TIMER_GetTimeInUS();
+        if (MODEL_RunInference() != kStatus_Success)
+        {
+            PRINTF("ERROR: Inference failed for vector %lu\r\n",
+                   (unsigned long)vectorIndex);
+            while (1) {}
+        }
+        uint32_t latency = TIMER_GetTimeInUS() - startTime;
+        minLatency = latency < minLatency ? latency : minLatency;
+        maxLatency = latency > maxLatency ? latency : maxLatency;
+        totalLatency += latency;
+
+        int predicted = 0;
+        int expectedPredicted = 0;
+        int vectorMaxAbsDiff = 0;
+        for (int outputIndex = 1; outputIndex < 4; outputIndex++)
+        {
+            if (output[outputIndex] > output[predicted])
+                predicted = outputIndex;
+            if (test_expected_out[vectorIndex][outputIndex] >
+                test_expected_out[vectorIndex][expectedPredicted])
+                expectedPredicted = outputIndex;
+        }
+        for (int outputIndex = 0; outputIndex < 4; outputIndex++)
+        {
+            int difference = static_cast<int>(output[outputIndex]) -
+                             static_cast<int>(test_expected_out[vectorIndex][outputIndex]);
+            int absoluteDifference = difference < 0 ? -difference : difference;
+            vectorMaxAbsDiff = absoluteDifference > vectorMaxAbsDiff
+                                   ? absoluteDifference
+                                   : vectorMaxAbsDiff;
+        }
+        maxAbsDiff = vectorMaxAbsDiff > maxAbsDiff ? vectorMaxAbsDiff : maxAbsDiff;
+        bool argmaxMatch = predicted == expectedPredicted;
+        bool labelMatch = predicted == test_labels[vectorIndex];
+        argmaxMatches += argmaxMatch ? 1u : 0u;
+        labelMatches += labelMatch ? 1u : 0u;
+
+        PRINTF("Vector %lu: label=%u expected_argmax=%d actual_argmax=%d "
+               "out=[%d,%d,%d,%d] expected=[%d,%d,%d,%d] diff_max=%d latency=%lu us\r\n",
+               (unsigned long)vectorIndex, test_labels[vectorIndex], expectedPredicted,
+               predicted, output[0], output[1], output[2], output[3],
+               test_expected_out[vectorIndex][0], test_expected_out[vectorIndex][1],
+               test_expected_out[vectorIndex][2], test_expected_out[vectorIndex][3],
+               vectorMaxAbsDiff, (unsigned long)latency);
     }
 
-    PRINTF("\r\n");
-
-    PRINTF("Output probabilities: ");
-
-    for (int i = 0; i < 4; i++)
-    {
-        float probability =
-            ((float)output[i] + 128.0f) * 0.00390625f;
-
-        PRINTF("%.3f ", probability);
-    }
-
-    PRINTF("\r\n");
-
-    int best = 0;
-
-    for (int i = 1; i < 4; i++)
-    {
-        if (output[i] > output[best])
-            best = i;
-    }
-
-    PRINTF("Predicted class: %d\r\n", best);
+    PRINTF("Summary: argmax=%lu/%u label_accuracy=%lu/%u max_abs_diff=%d "
+           "latency_us[min/mean/max]=%lu/%lu/%lu\r\n",
+           (unsigned long)argmaxMatches, NUM_TEST_VECTORS,
+           (unsigned long)labelMatches, NUM_TEST_VECTORS, maxAbsDiff,
+           (unsigned long)minLatency,
+           (unsigned long)(totalLatency / NUM_TEST_VECTORS),
+           (unsigned long)maxLatency);
 
     while (1)
     {
