@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "components/mt48lc2m32b2",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/components/mt48lc2m32b2"
+	}
+}

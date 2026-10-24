@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "devices/MCX/MCXN/MCXN947/drivers",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers"
+	}
+}

@@ -1,0 +1,8 @@
+C:/FRDM/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2346:26:__NVIC_GetPriorityGrouping	4	static
+C:/FRDM/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2555:22:__NVIC_SetPriority	16	static
+C:/FRDM/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2602:26:NVIC_EncodePriority	40	static
+C:/FRDM/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:3108:26:SysTick_Config	16	static
+C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/common/timer.c:36:6:SysTick_Handler	4	static
+C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/common/timer.c:41:6:TIMER_Init	16	static
+C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/common/timer.c:53:5:TIMER_GetTimeInUS	16	static
+C:/Users/SHREED~1/MCUXPR~3/ARM-GN~1.REL/arm-none-eabi/include/sys/time.h:432:5:gettimeofday	32	static

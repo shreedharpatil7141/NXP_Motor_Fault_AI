@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/mpu",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/mpu"
+	}
+}

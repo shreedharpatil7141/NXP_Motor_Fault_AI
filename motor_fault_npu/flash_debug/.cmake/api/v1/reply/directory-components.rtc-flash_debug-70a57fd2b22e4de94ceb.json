@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "components/rtc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/components/rtc"
+	}
+}

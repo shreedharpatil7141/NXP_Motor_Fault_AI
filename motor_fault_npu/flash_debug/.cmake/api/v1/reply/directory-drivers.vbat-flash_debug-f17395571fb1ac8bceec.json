@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/vbat",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/vbat"
+	}
+}

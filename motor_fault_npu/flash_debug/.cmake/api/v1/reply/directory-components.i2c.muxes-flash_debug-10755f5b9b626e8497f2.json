@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "components/i2c/muxes",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/components/i2c/muxes"
+	}
+}

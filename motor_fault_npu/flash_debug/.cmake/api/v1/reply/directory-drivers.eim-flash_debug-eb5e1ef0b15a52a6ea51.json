@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/eim",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/eim"
+	}
+}

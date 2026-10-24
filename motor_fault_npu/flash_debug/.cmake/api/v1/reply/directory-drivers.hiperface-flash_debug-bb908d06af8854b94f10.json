@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/hiperface",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/hiperface"
+	}
+}

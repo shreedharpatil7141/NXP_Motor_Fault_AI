@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/jn_pwm",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/jn_pwm"
+	}
+}

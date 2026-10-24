@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/mecc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/mecc"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/mcx_vbat",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/mcx_vbat"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/waketimer",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/waketimer"
+	}
+}

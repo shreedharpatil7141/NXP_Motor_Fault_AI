@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/lmem",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/lmem"
+	}
+}

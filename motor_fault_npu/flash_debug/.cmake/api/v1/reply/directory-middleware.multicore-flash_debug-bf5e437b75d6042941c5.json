@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "middleware/multicore",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/middleware/multicore"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/dcdc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/dcdc"
+	}
+}

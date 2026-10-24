@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "middleware/multicore/rpmsg-lite",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/middleware/multicore/rpmsg-lite"
+	}
+}

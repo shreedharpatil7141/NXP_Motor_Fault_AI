@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "middleware/mcu_bootloader",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/middleware/mcu_bootloader"
+	}
+}

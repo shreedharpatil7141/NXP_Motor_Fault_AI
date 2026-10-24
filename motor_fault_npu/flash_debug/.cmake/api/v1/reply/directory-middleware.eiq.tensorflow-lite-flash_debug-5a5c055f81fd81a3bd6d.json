@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "middleware/eiq/tensorflow-lite",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/middleware/eiq/tensorflow-lite"
+	}
+}

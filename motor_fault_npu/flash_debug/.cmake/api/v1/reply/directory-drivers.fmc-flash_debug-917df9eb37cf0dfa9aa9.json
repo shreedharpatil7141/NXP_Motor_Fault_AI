@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/fmc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/fmc"
+	}
+}

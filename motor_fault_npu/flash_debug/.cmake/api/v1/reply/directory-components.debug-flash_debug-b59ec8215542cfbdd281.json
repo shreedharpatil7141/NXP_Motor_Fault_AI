@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "components/debug",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/components/debug"
+	}
+}

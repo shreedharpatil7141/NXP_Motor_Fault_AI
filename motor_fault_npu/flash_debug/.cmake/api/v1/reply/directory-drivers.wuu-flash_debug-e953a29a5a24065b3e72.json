@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/wuu",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/wuu"
+	}
+}

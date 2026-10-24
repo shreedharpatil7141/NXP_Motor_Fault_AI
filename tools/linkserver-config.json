@@ -1,0 +1,5 @@
+{
+  "ports": {
+    "internal-stub-stdout": [25555, 26555]
+  }
+}

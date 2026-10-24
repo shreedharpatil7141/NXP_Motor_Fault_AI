@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/emc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/emc"
+	}
+}

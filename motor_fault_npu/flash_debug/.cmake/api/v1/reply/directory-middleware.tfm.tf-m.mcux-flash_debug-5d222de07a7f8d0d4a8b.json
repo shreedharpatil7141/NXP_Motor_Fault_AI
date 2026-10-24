@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "middleware/tfm/tf-m/mcux",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/middleware/tfm/tf-m/mcux"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/mcm",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/mcm"
+	}
+}

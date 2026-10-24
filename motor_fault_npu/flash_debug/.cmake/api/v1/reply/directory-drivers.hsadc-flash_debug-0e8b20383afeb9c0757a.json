@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/hsadc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/hsadc"
+	}
+}

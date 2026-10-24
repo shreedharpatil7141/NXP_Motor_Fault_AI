@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "components/ele_crypto",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/components/ele_crypto"
+	}
+}

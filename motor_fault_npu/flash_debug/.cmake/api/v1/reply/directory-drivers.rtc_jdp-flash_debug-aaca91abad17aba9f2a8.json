@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/rtc_jdp",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/rtc_jdp"
+	}
+}

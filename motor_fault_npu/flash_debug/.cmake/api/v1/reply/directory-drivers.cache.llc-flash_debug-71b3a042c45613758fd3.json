@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/cache/llc",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/cache/llc"
+	}
+}

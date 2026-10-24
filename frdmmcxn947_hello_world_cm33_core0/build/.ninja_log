@@ -1,0 +1,24 @@
+# ninja log v6
+70	440	8093687252593878	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/system_MCXN947_cm33_core0.c.obj	c3cb2995fa638f76
+77	471	8093687252663886	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/gcc/startup_MCXN947_cm33_core0.S.obj	96cbb79eaa254d83
+84	489	8093687252743883	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers/fsl_clock.c.obj	498ef8eb3d0c1e9b
+100	506	8093687252903885	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers/fsl_reset.c.obj	7fe9b14912f38f9
+116	537	8093687253063901	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/board.c.obj	75edacb4a5472fcc
+133	540	8093687253223879	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/clock_config.c.obj	a5c816f019b625cb
+156	543	8093687253453895	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/demo_apps/hello_world/pin_mux.c.obj	dfa909490a9e51d7
+173	545	8093687253623891	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/demo_apps/hello_world/cm33_core0/hardware_init.c.obj	460ed115c18eab26
+189	548	8093687253793898	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/common/fsl_common.c.obj	ce29b6efbe7324f5
+206	550	8093687253953896	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/common/fsl_common_arm.c.obj	c6284e36632be2a4
+229	553	8093687254193896	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj	3abab813896f4cc4
+247	555	8093687254373882	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/lpflexcomm/fsl_lpflexcomm.c.obj	29910aaf2c27e013
+265	558	8093687254553899	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj	459aabc090a4d592
+387	560	8093687255763899	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_syscall_stub.c.obj	d0b747c91955053c
+413	561	8093687256033894	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_sbrk.c.obj	ae94ab6fb68e619d
+442	561	8093687256323881	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_memcpy.S.obj	94dd870f721038df
+318	576	8093687255083893	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/assert/fsl_assert.c.obj	54b3cf222f9de0ac
+291	597	8093687254813903	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/drivers/lpflexcomm/lpuart/fsl_lpuart.c.obj	514243f0f568f8a6
+344	604	8093687255343917	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/debug_console_lite/fsl_debug_console.c.obj	8fb466b40831ce7c
+471	671	8093687256613897	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/str/fsl_str.c.obj	72bd60361beb2497
+489	685	8093687256793898	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/C_/FRDM/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj	9ecf347c19a79fb7
+506	701	8093687256963942	CMakeFiles/frdmmcxn947_hello_world_cm33_core0_cm33_core0.dir/hello_world.c.obj	643049fbbd9d468
+701	832	8093687258903891	frdmmcxn947_hello_world_cm33_core0_cm33_core0.elf	a5cd470102e28793

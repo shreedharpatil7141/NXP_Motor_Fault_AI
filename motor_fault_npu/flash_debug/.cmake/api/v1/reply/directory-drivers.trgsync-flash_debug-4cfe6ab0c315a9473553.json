@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "drivers/trgsync",
+		"source" : "C:/FRDM/mcuxsdk/mcuxsdk/drivers/trgsync"
+	}
+}
