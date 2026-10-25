@@ -9,3 +9,5 @@ models/*.tflite
 models/*.npz
 results/*.txt
 results/*.json
+build/
+motor_fault_npu/flash_debug/
