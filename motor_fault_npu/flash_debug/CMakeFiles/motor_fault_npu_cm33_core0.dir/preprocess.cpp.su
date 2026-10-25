@@ -1,6 +1,0 @@
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:77:5:int {anonymous}::scaled_float(float)	16	static
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:96:9:int32_t {anonymous}::quantize_feature(float)	32	static
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:114:6:void {anonymous}::initialize_cpu_fft()	8	static
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:131:6:void {anonymous}::cpu_fft_magnitudes(const float*, float*)	40	static
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:148:17:void preprocess_window(const float*, int8_t*)	24	static
-C:/NXP_Motor_Fault_AI/motor_fault_npu/preprocess.cpp:180:17:void preprocess_debug_once(const float*)	2120	static

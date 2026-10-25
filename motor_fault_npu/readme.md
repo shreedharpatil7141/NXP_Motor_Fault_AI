@@ -151,6 +151,13 @@ If the extension reports that the target information does not match the debug
 device, regenerate or edit the profile so the LinkServer device is
 `MCXN947:FRDM-MCXN947`; `CTN730` is not the target device for this project.
 
+## Streaming simulation
+
+The firmware includes a 12 kHz CTIMER4 simulation that replays the generated
+raw windows through a float ring buffer. It processes 1024-sample windows with
+512-sample hops, runs 200 windows, and reports preprocessing, inference, total
+latency, CPU load, overruns, dropped samples, and the predicted-class histogram.
+
 **(2) Project Structure in *MCUXpresso for VScode***
 
 Please select the following two options in the ***MCUXpresso for VS Code*** extension settings:

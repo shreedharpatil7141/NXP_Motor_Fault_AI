@@ -1,3 +1,0 @@
-C:/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers/fsl_reset.c:41:6:RESET_SetPeripheralReset	32	static
-C:/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers/fsl_reset.c:74:6:RESET_ClearPeripheralReset	32	static
-C:/FRDM/mcuxsdk/mcuxsdk/devices/MCX/MCXN/MCXN947/drivers/fsl_reset.c:108:6:RESET_PeripheralReset	16	static

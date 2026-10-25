@@ -1,3 +1,0 @@
-C:/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/board.c:28:6:BOARD_InitDebugConsole	16	static
-C:/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/board.c:44:6:BOARD_InitDebugConsole_Core1	16	static
-C:/FRDM/mcuxsdk/mcuxsdk/examples/_boards/frdmmcxn947/board.c:232:6:BOARD_PowerMode_OD	16	static

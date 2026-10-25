@@ -92,6 +92,7 @@ target_include_directories(
     ${SdkRootDirPath}/examples/eiq_examples/common
     ${SdkRootDirPath}/examples/eiq_examples/common/tflm/model
     ${SdkRootDirPath}/drivers/powerquad
+    ${SdkRootDirPath}/drivers/ctimer
     ${SdkRootDirPath}/arch/arm/CMSIS/DSP/Include
 )
 
@@ -102,6 +103,7 @@ target_sources(
     ${SdkRootDirPath}/examples/eiq_examples/common/timer.c
     ${SdkRootDirPath}/drivers/powerquad/fsl_powerquad_basic.c
     ${SdkRootDirPath}/drivers/powerquad/fsl_powerquad_transform.c
+    ${SdkRootDirPath}/drivers/ctimer/fsl_ctimer.c
 )
 
 target_link_libraries(
