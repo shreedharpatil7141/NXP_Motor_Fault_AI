@@ -33,6 +33,16 @@ extern "C" void hard_fault_report(uint32_t *stacked)
 
 namespace
 {
+static void print_int(int value)
+{
+    if (value < 0)
+    {
+        PRINTF("-");
+        value = -value;
+    }
+    PRINTF("%u", static_cast<unsigned int>(value));
+}
+
 constexpr uint32_t kSampleRateHz = 12000U;
 constexpr uint32_t kStreamWindowSize = 1024U;
 constexpr uint32_t kStreamHopSize = 512U;
@@ -44,22 +54,34 @@ CTIMER_Type *const kStreamTimer = CTIMER4;
 float s_streamRing[kStreamRingSize] __ALIGNED(16);
 volatile uint32_t s_streamProduced = 0;
 volatile uint32_t s_streamOldest = 0;
+volatile uint32_t s_streamIsrTicks = 0;
+volatile uint32_t s_streamPushed = 0;
+volatile uint32_t s_streamConsumed = 0;
 volatile uint32_t s_streamDropped = 0;
+volatile uint32_t s_streamMaxOccupancy = 0;
 
 void stream_timer_callback(uint32_t flags)
 {
     (void)flags;
+    s_streamIsrTicks++;
     uint32_t produced = s_streamProduced;
+    uint32_t occupancy = produced - s_streamOldest;
+    if (occupancy >= kStreamRingSize)
+    {
+        s_streamDropped++;
+        return;
+    }
     uint32_t sourceIndex = produced % (RAW_NUM_WINDOWS * RAW_WINDOW_SIZE);
     uint32_t sourceWindow = sourceIndex / RAW_WINDOW_SIZE;
     uint32_t sourceSample = sourceIndex % RAW_WINDOW_SIZE;
     s_streamRing[produced % kStreamRingSize] =
         raw_windows[sourceWindow][sourceSample];
     s_streamProduced = produced + 1U;
-    if ((produced + 1U) - s_streamOldest > kStreamRingSize)
+    s_streamPushed++;
+    occupancy++;
+    if (occupancy > s_streamMaxOccupancy)
     {
-        s_streamOldest++;
-        s_streamDropped++;
+        s_streamMaxOccupancy = occupancy;
     }
 }
 
@@ -80,14 +102,26 @@ void stream_timer_init()
     ctimer_match_config_t matchConfig;
     matchConfig.enableCounterReset = true;
     matchConfig.enableCounterStop = false;
-    matchConfig.matchValue =
-        CLOCK_GetCTimerClkFreq(kStreamTimerIndex) / kSampleRateHz;
+    uint32_t timerClockHz = CLOCK_GetCTimerClkFreq(kStreamTimerIndex);
+    uint32_t prescale = config.prescale;
+    uint32_t matchValue = timerClockHz / ((prescale + 1U) * kSampleRateHz);
+    matchConfig.matchValue = matchValue;
     matchConfig.outControl = kCTIMER_Output_NoAction;
     matchConfig.outPinInitState = false;
     matchConfig.enableInterrupt = true;
-    PRINTF("checkpoint CTIMER4 interrupt enable before %d\r\n", (int)1);
+    PRINTF("CTIMER4 input_clock_hz=%u prescale=%u match=%u rate_hz=%u\r\n",
+           static_cast<unsigned int>(timerClockHz),
+           static_cast<unsigned int>(prescale),
+           static_cast<unsigned int>(matchValue),
+           static_cast<unsigned int>(timerClockHz /
+                                     ((prescale + 1U) * matchValue)));
+    PRINTF("checkpoint CTIMER4 interrupt enable before ");
+    print_int(1);
+    PRINTF("\r\n");
     CTIMER_SetupMatch(kStreamTimer, kCTIMER_Match_0, &matchConfig);
-    PRINTF("checkpoint CTIMER4 interrupt enable after %d\r\n", (int)1);
+    PRINTF("checkpoint CTIMER4 interrupt enable after ");
+    print_int(1);
+    PRINTF("\r\n");
 }
 
 bool stream_copy_latest_window(float *window)
@@ -107,6 +141,19 @@ bool stream_copy_latest_window(float *window)
     }
     return true;
 }
+
+struct stream_window_result_t
+{
+    uint32_t preprocessUs;
+    uint32_t inferenceUs;
+    uint32_t totalUs;
+    int predicted;
+    uint32_t occupancy;
+    bool overrun;
+};
+
+static stream_window_result_t
+    s_streamResults[kStreamWindowCount];
 }
 
 int main(void)
@@ -134,7 +181,9 @@ int main(void)
     uint8_t *outputData =
         MODEL_GetOutputTensorData(&outputDims, &outputType);
 
-    PRINTF("Input type: %d\r\n", (int)inputType);
+    PRINTF("Input type: ");
+    print_int((int)inputType);
+    PRINTF("\r\n");
     PRINTF("Input shape: ");
 
     for (uint32_t i = 0; i < inputDims.size; i++)
@@ -142,7 +191,9 @@ int main(void)
 
     PRINTF("\r\n");
 
-    PRINTF("Output type: %d\r\n", (int)outputType);
+    PRINTF("Output type: ");
+    print_int((int)outputType);
+    PRINTF("\r\n");
     PRINTF("Output shape: ");
 
     for (uint32_t i = 0; i < outputDims.size; i++)
@@ -195,20 +246,19 @@ int main(void)
 
         if (vectorIndex == 0U)
         {
-            PRINTF("Feature probe: fw=[%d,%d,%d,%d,%d,%d,%d,%d] "
-                   "ref=[%d,%d,%d,%d,%d,%d,%d,%d]\r\n",
-                   static_cast<int>(features[0]), static_cast<int>(features[1]),
-                   static_cast<int>(features[2]), static_cast<int>(features[3]),
-                   static_cast<int>(features[4]), static_cast<int>(features[5]),
-                   static_cast<int>(features[6]), static_cast<int>(features[7]),
-                   static_cast<int>(raw_expected_feat[0][0]),
-                   static_cast<int>(raw_expected_feat[0][1]),
-                   static_cast<int>(raw_expected_feat[0][2]),
-                   static_cast<int>(raw_expected_feat[0][3]),
-                   static_cast<int>(raw_expected_feat[0][4]),
-                   static_cast<int>(raw_expected_feat[0][5]),
-                   static_cast<int>(raw_expected_feat[0][6]),
-                   static_cast<int>(raw_expected_feat[0][7]));
+            PRINTF("Feature probe: fw=[");
+            for (uint32_t i = 0; i < 8U; ++i)
+            {
+                if (i != 0U) PRINTF(",");
+                print_int((int)features[i]);
+            }
+            PRINTF("] ref=[");
+            for (uint32_t i = 0; i < 8U; ++i)
+            {
+                if (i != 0U) PRINTF(",");
+                print_int((int)raw_expected_feat[0][i]);
+            }
+            PRINTF("]\r\n");
         }
 
         uint32_t inferenceStart = TIMER_GetTimeInUS();
@@ -238,26 +288,26 @@ int main(void)
         featureArgmaxMatches += argmaxMatch ? 1u : 0u;
         labelMatches += labelMatch ? 1u : 0u;
 
-        PRINTF("Vector %u: label=%u expected_argmax=%d actual_argmax=%d "
-               "out=[%d,%d,%d,%d] expected=[%d,%d,%d,%d] "
-               "feat_diff_max=%d feat_diff_gt1=%u preprocess=%u us inference=%u us\r\n",
-               static_cast<unsigned int>(vectorIndex), raw_labels[vectorIndex],
-               (int)expectedPredicted, (int)predicted, static_cast<int>(output[0]),
-               static_cast<int>(output[1]), static_cast<int>(output[2]),
-               static_cast<int>(output[3]), static_cast<int>(raw_expected_out[vectorIndex][0]),
-               static_cast<int>(raw_expected_out[vectorIndex][1]),
-               static_cast<int>(raw_expected_out[vectorIndex][2]),
-               static_cast<int>(raw_expected_out[vectorIndex][3]),
-               (int)vectorMaxAbsDiff, static_cast<unsigned int>(vectorDiffOverOne),
+        PRINTF("Vector %u: label=%u expected_argmax=", static_cast<unsigned int>(vectorIndex),
+               raw_labels[vectorIndex]);
+        print_int(expectedPredicted); PRINTF(" actual_argmax="); print_int(predicted);
+        PRINTF(" out=[");
+        for (int i = 0; i < 4; ++i) { if (i != 0) PRINTF(","); print_int((int)output[i]); }
+        PRINTF("] expected=[");
+        for (int i = 0; i < 4; ++i) { if (i != 0) PRINTF(","); print_int((int)raw_expected_out[vectorIndex][i]); }
+        PRINTF("] feat_diff_max="); print_int(vectorMaxAbsDiff);
+        PRINTF(" feat_diff_gt1=%u preprocess=%u us inference=%u us\r\n",
+               static_cast<unsigned int>(vectorDiffOverOne),
                static_cast<unsigned int>(preprocessLatency),
                static_cast<unsigned int>(inferenceLatency));
     }
 
     PRINTF("Summary: expected_argmax=%u/%u label_accuracy=%u/%u "
-           "feature_max_abs_diff=%d feature_diff_gt1=%u\r\n",
+           "feature_max_abs_diff=",
            static_cast<unsigned int>(featureArgmaxMatches), RAW_NUM_WINDOWS,
-           static_cast<unsigned int>(labelMatches), RAW_NUM_WINDOWS,
-           (int)featureMaxAbsDiff, static_cast<unsigned int>(featureDiffOverOne));
+           static_cast<unsigned int>(labelMatches), RAW_NUM_WINDOWS);
+    print_int(featureMaxAbsDiff);
+    PRINTF(" feature_diff_gt1=%u\r\n", static_cast<unsigned int>(featureDiffOverOne));
     PRINTF("Latency_us[preprocess min/mean/max]=%u/%u/%u "
            "inference min/mean/max=%u/%u/%u\r\n",
            static_cast<unsigned int>(preprocessMin),
@@ -268,8 +318,9 @@ int main(void)
            static_cast<unsigned int>(inferenceMax));
 
     PRINTF("\r\n=== Streaming simulation: 12 kHz, 50%% overlap ===\r\n");
-    PRINTF("Window period_us=42667 samples_per_window=%d hop=%d\r\n",
-           (int)kStreamWindowSize, (int)kStreamHopSize);
+    PRINTF("Window period_us=42667 samples_per_window=%u hop=%u\r\n",
+           static_cast<unsigned int>(kStreamWindowSize),
+           static_cast<unsigned int>(kStreamHopSize));
     static float streamWindow[kStreamWindowSize] __ALIGNED(16);
     static int8_t streamFeatures[RAW_FEATURE_SIZE];
     uint32_t streamHistogram[4] = {0, 0, 0, 0};
@@ -286,13 +337,24 @@ int main(void)
     uint32_t processedWindows = 0;
     uint32_t streamOverruns = 0;
 
-    PRINTF("checkpoint CTIMER4 init before %d\r\n", (int)1);
+    PRINTF("checkpoint CTIMER4 init before ");
+    print_int(1);
+    PRINTF("\r\n");
     stream_timer_init();
-    PRINTF("checkpoint CTIMER4 init after %d\r\n", (int)1);
-    PRINTF("checkpoint CTIMER4 start before %d\r\n", (int)1);
+    PRINTF("checkpoint CTIMER4 init after ");
+    print_int(1);
+    PRINTF("\r\n");
+    uint32_t streamStart = TIMER_GetTimeInUS();
+    PRINTF("checkpoint CTIMER4 start before ");
+    print_int(1);
+    PRINTF("\r\n");
     CTIMER_StartTimer(kStreamTimer);
-    PRINTF("checkpoint CTIMER4 start after %d\r\n", (int)1);
-    PRINTF("checkpoint streaming loop entry %d\r\n", (int)1);
+    PRINTF("checkpoint CTIMER4 start after ");
+    print_int(1);
+    PRINTF("\r\n");
+    PRINTF("checkpoint streaming loop entry ");
+    print_int(1);
+    PRINTF("\r\n");
     while (processedWindows < kStreamWindowCount)
     {
         if (s_streamProduced < nextWindowEnd)
@@ -302,7 +364,6 @@ int main(void)
         uint32_t totalStart = TIMER_GetTimeInUS();
         if (!stream_copy_latest_window(streamWindow))
         {
-            s_streamDropped++;
             nextWindowEnd += kStreamHopSize;
             continue;
         }
@@ -331,6 +392,11 @@ int main(void)
                 predicted = outputIndex;
             }
         }
+        uint32_t occupancy = s_streamProduced - s_streamOldest;
+        bool overrun = s_streamIsrTicks >= nextWindowEnd + kStreamHopSize;
+        s_streamResults[processedWindows] = {
+            preprocessLatency, inferenceLatency, totalLatency, predicted,
+            occupancy, overrun};
         streamHistogram[predicted]++;
         streamPreprocessTotal += preprocessLatency;
         streamInferenceTotal += inferenceLatency;
@@ -351,34 +417,64 @@ int main(void)
             totalLatency < streamTotalMin ? totalLatency : streamTotalMin;
         streamTotalMax =
             totalLatency > streamTotalMax ? totalLatency : streamTotalMax;
-        if (s_streamProduced >= nextWindowEnd + kStreamHopSize)
-        {
-            streamOverruns++;
-        }
+        streamOverruns += overrun ? 1U : 0U;
+        s_streamOldest += kStreamHopSize;
+        s_streamConsumed += kStreamHopSize;
         processedWindows++;
         nextWindowEnd += kStreamHopSize;
     }
 
     CTIMER_StopTimer(kStreamTimer);
+    uint32_t streamElapsed = TIMER_GetTimeInUS() - streamStart;
     uint32_t meanTotal = static_cast<uint32_t>(
         streamTotalTotal / kStreamWindowCount);
     uint32_t cpuLoadPermille = (meanTotal * 100000U) / 42667U;
-    PRINTF("Streaming class histogram: Normal=%d IR=%d OR=%d B=%d\r\n",
-           (int)streamHistogram[0], (int)streamHistogram[1],
-           (int)streamHistogram[2], (int)streamHistogram[3]);
-    PRINTF("Streaming windows=%d overruns=%d dropped_samples=%d\r\n",
-           (int)processedWindows, (int)streamOverruns, (int)s_streamDropped);
-    PRINTF("Streaming us[preprocess min/mean/max]=%d/%d/%d "
-           "inference=%d/%d/%d total=%d/%d/%d\r\n",
-           (int)streamPreprocessMin,
-           (int)(streamPreprocessTotal / kStreamWindowCount),
-           (int)streamPreprocessMax, (int)streamInferenceMin,
-           (int)(streamInferenceTotal / kStreamWindowCount),
-           (int)streamInferenceMax, (int)streamTotalMin,
-           (int)(streamTotalTotal / kStreamWindowCount),
-           (int)streamTotalMax);
-    PRINTF("Streaming period_us=42667 CPU_load_percent_x1000=%d\r\n",
-           (int)cpuLoadPermille);
+    uint64_t effectiveRateX1000 =
+        (static_cast<uint64_t>(s_streamIsrTicks) * 1000000000ULL) /
+        streamElapsed;
+    PRINTF("Streaming class histogram: ");
+    print_int((int)streamHistogram[0]); PRINTF(" IR="); print_int((int)streamHistogram[1]);
+    PRINTF(" OR="); print_int((int)streamHistogram[2]); PRINTF(" B="); print_int((int)streamHistogram[3]);
+    PRINTF("\r\n");
+    PRINTF("Streaming windows="); print_int((int)processedWindows);
+    PRINTF(" overruns="); print_int((int)streamOverruns);
+    PRINTF(" dropped_samples="); print_int((int)s_streamDropped); PRINTF("\r\n");
+    PRINTF("Streaming us[preprocess min/mean/max]=");
+    print_int((int)streamPreprocessMin); PRINTF("/"); print_int((int)(streamPreprocessTotal / kStreamWindowCount));
+    PRINTF("/"); print_int((int)streamPreprocessMax); PRINTF(" inference=");
+    print_int((int)streamInferenceMin); PRINTF("/"); print_int((int)(streamInferenceTotal / kStreamWindowCount));
+    PRINTF("/"); print_int((int)streamInferenceMax); PRINTF(" total=");
+    print_int((int)streamTotalMin); PRINTF("/"); print_int((int)(streamTotalTotal / kStreamWindowCount));
+    PRINTF("/"); print_int((int)streamTotalMax); PRINTF("\r\n");
+    PRINTF("Streaming elapsed_us=%u ISR_ticks=%u samples_pushed=%u samples_consumed=%u "
+           "samples_dropped=%u max_ring_occupancy=%u ring_capacity=%u\r\n",
+           static_cast<unsigned int>(streamElapsed),
+           static_cast<unsigned int>(s_streamIsrTicks),
+           static_cast<unsigned int>(s_streamPushed),
+           static_cast<unsigned int>(s_streamConsumed),
+           static_cast<unsigned int>(s_streamDropped),
+           static_cast<unsigned int>(s_streamMaxOccupancy),
+           static_cast<unsigned int>(kStreamRingSize));
+    PRINTF("Streaming effective_rate_hz_x1000=");
+    print_int(static_cast<int>(effectiveRateX1000));
+    PRINTF(" expected=");
+    print_int(12000000);
+    PRINTF("\r\n");
+    PRINTF("Streaming period_us=42667 CPU_load_percent_x1000=");
+    print_int((int)cpuLoadPermille); PRINTF("\r\n");
+    for (uint32_t index = 0; index < processedWindows; ++index)
+    {
+        stream_window_result_t &result = s_streamResults[index];
+        PRINTF("Stream window %u: preprocess_us=%u inference_us=%u total_us=%u predicted=",
+               static_cast<unsigned int>(index),
+               static_cast<unsigned int>(result.preprocessUs),
+               static_cast<unsigned int>(result.inferenceUs),
+               static_cast<unsigned int>(result.totalUs));
+        print_int(result.predicted);
+        PRINTF(" occupancy=%u overrun=%u\r\n",
+               static_cast<unsigned int>(result.occupancy),
+               result.overrun ? 1U : 0U);
+    }
 
     while (1)
     {

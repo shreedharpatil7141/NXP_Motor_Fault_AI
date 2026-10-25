@@ -21,6 +21,16 @@
 
 namespace
 {
+static void print_int(int value)
+{
+    if (value < 0)
+    {
+        PRINTF("-");
+        value = -value;
+    }
+    PRINTF("%u", static_cast<unsigned int>(value));
+}
+
 constexpr uint32_t kWindowSize = 1024;
 constexpr uint32_t kFeatureSize = 513;
 constexpr float kMean = 1.2953433990478516f;
@@ -88,10 +98,12 @@ void print_debug_powerquad_output(uint32_t bin)
     uint32_t imagWord = reinterpret_cast<uint32_t *>(s_debugResult)[2U * bin + 1U];
     float real = s_debugResult[2U * bin];
     float imag = s_debugResult[2U * bin + 1U];
-    PRINTF("PQ out bin %u: real=0x%08x (%d) imag=0x%08x (%d)\r\n",
-           static_cast<unsigned int>(bin), static_cast<unsigned int>(realWord),
-           scaled_float(real), static_cast<unsigned int>(imagWord),
-           scaled_float(imag));
+    PRINTF("PQ out bin %u: real=0x%08x (", static_cast<unsigned int>(bin),
+           static_cast<unsigned int>(realWord));
+    print_int(scaled_float(real));
+    PRINTF(") imag=0x%08x (", static_cast<unsigned int>(imagWord));
+    print_int(scaled_float(imag));
+    PRINTF(")\r\n");
 }
 #endif
 
@@ -127,7 +139,7 @@ void initialize_cpu_fft()
         {
         }
     }
-    PRINTF("checkpoint arm_rfft_fast_init_f32 after %d\r\n", (int)1);
+    PRINTF("checkpoint arm_rfft_fast_init_f32 after "); print_int(1); PRINTF("\r\n");
     s_cpuInitialized = true;
 }
 
@@ -137,12 +149,12 @@ void cpu_fft_magnitudes(const float *raw1024, float *magnitudes)
     std::memcpy(s_cpuInput, raw1024, sizeof(s_cpuInput));
     if (!s_firstCpuFftReported)
     {
-        PRINTF("checkpoint first arm_rfft_fast_f32 before %d\r\n", (int)1);
+        PRINTF("checkpoint first arm_rfft_fast_f32 before "); print_int(1); PRINTF("\r\n");
     }
     arm_rfft_fast_f32(&s_cpuRfft, s_cpuInput, s_cpuOutput, 0);
     if (!s_firstCpuFftReported)
     {
-        PRINTF("checkpoint first arm_rfft_fast_f32 after %d\r\n", (int)1);
+        PRINTF("checkpoint first arm_rfft_fast_f32 after "); print_int(1); PRINTF("\r\n");
         s_firstCpuFftReported = true;
     }
     magnitudes[0] = fabsf(s_cpuOutput[0]);
@@ -197,9 +209,10 @@ extern "C" void preprocess_debug_once(const float *vector0)
     initialize_powerquad();
     PRINTF("\r\n=== preprocess_window debug (one-shot) ===\r\n");
     PRINTF("Vector 0 label: Normal (%u)\r\n", 0u);
-    PRINTF("raw_windows[0] first4 x1000=[%d,%d,%d,%d]\r\n",
-           (int)scaled_float(vector0[0]), (int)scaled_float(vector0[1]),
-           (int)scaled_float(vector0[2]), (int)scaled_float(vector0[3]));
+    PRINTF("raw_windows[0] first4 x1000=[");
+    print_int(scaled_float(vector0[0])); PRINTF(","); print_int(scaled_float(vector0[1]));
+    PRINTF(","); print_int(scaled_float(vector0[2])); PRINTF(","); print_int(scaled_float(vector0[3]));
+    PRINTF("]\r\n");
 
     for (uint32_t index = 0; index < kWindowSize; ++index)
     {
@@ -208,9 +221,10 @@ extern "C" void preprocess_debug_once(const float *vector0)
                                static_cast<float>(index) /
                                static_cast<float>(kWindowSize));
     }
-    PRINTF("sine window first4 x1000=[%d,%d,%d,%d]\r\n",
-           (int)scaled_float(sineWindow[0]), (int)scaled_float(sineWindow[1]),
-           (int)scaled_float(sineWindow[2]), (int)scaled_float(sineWindow[3]));
+    PRINTF("sine window first4 x1000=[");
+    print_int(scaled_float(sineWindow[0])); PRINTF(","); print_int(scaled_float(sineWindow[1]));
+    PRINTF(","); print_int(scaled_float(sineWindow[2])); PRINTF(","); print_int(scaled_float(sineWindow[3]));
+    PRINTF("]\r\n");
 
     std::memcpy(s_debugInput, sineWindow, sizeof(s_debugInput));
     configure_powerquad(kPQ_Float, 0, 0);
@@ -235,9 +249,9 @@ extern "C" void preprocess_debug_once(const float *vector0)
     {
         uint32_t rawWord = reinterpret_cast<uint32_t *>(s_debugResult)[word];
         float decoded = s_debugResult[word];
-        PRINTF("  word[%u]=0x%08x decoded_x1000=%d\r\n",
-               static_cast<unsigned int>(word),
-               static_cast<unsigned int>(rawWord), (int)scaled_float(decoded));
+        PRINTF("  word[%u]=0x%08x decoded_x1000=",
+               static_cast<unsigned int>(word), static_cast<unsigned int>(rawWord));
+        print_int(scaled_float(decoded)); PRINTF("\r\n");
     }
     PRINTF("PQ sine bins (decoded real/imag x1000):\r\n");
     print_debug_powerquad_output(49U);
@@ -266,10 +280,10 @@ extern "C" void preprocess_debug_once(const float *vector0)
         {
             quantized = 127;
         }
-        PRINTF("  bin %u: %d/%d/%d/%d\r\n",
-               static_cast<unsigned int>(bin), (int)scaled_float(magnitude),
-               (int)scaled_float(logged), (int)scaled_float(normalized),
-               static_cast<int>(static_cast<int8_t>(quantized)));
+        PRINTF("  bin %u: ", static_cast<unsigned int>(bin));
+        print_int(scaled_float(magnitude)); PRINTF("/"); print_int(scaled_float(logged));
+        PRINTF("/"); print_int(scaled_float(normalized)); PRINTF("/");
+        print_int(static_cast<int>(static_cast<int8_t>(quantized))); PRINTF("\r\n");
     }
 
     configure_powerquad(kPQ_32Bit, 10, 0);
@@ -277,11 +291,12 @@ extern "C" void preprocess_debug_once(const float *vector0)
     initialize_cpu_fft();
     PRINTF("\r\n=== preprocess_window CPU FFT debug (one-shot) ===\r\n");
     PRINTF("Vector 0 label: Normal (0)\r\n");
-    PRINTF("raw_windows[0] first4 x1000=[%d,%d,%d,%d]\r\n",
-           (int)scaled_float(vector0[0]), (int)scaled_float(vector0[1]),
-           (int)scaled_float(vector0[2]), (int)scaled_float(vector0[3]));
-    PRINTF("Normalization scalars: mean_x1000=%d std_x1000=%d\r\n",
-           (int)scaled_float(kMean), (int)scaled_float(kStd));
+    PRINTF("raw_windows[0] first4 x1000=[");
+    print_int(scaled_float(vector0[0])); PRINTF(","); print_int(scaled_float(vector0[1]));
+    PRINTF(","); print_int(scaled_float(vector0[2])); PRINTF(","); print_int(scaled_float(vector0[3]));
+    PRINTF("]\r\n");
+    PRINTF("Normalization scalars: mean_x1000="); print_int(scaled_float(kMean));
+    PRINTF(" std_x1000="); print_int(scaled_float(kStd)); PRINTF("\r\n");
     for (uint32_t index = 0; index < kWindowSize; ++index)
     {
         sineWindow[index] =
@@ -289,41 +304,42 @@ extern "C" void preprocess_debug_once(const float *vector0)
                                static_cast<float>(index) /
                                static_cast<float>(kWindowSize));
     }
-    PRINTF("checkpoint sine window generation after %d\r\n", (int)1);
+    PRINTF("checkpoint sine window generation after "); print_int(1); PRINTF("\r\n");
     cpu_fft_magnitudes(sineWindow, s_debugSineMagnitude);
-    PRINTF("checkpoint sine magnitude after %d\r\n", (int)1);
-    PRINTF("CPU sine mag[50]=%d (expected 512000 +/-1%%)\r\n",
-           (int)scaled_float(s_debugSineMagnitude[50]));
-    PRINTF("CPU sine mags bins 49/51/0/512 x1000=%d/%d/%d/%d\r\n",
-           (int)scaled_float(s_debugSineMagnitude[49]),
-           (int)scaled_float(s_debugSineMagnitude[51]),
-           (int)scaled_float(s_debugSineMagnitude[0]),
-           (int)scaled_float(s_debugSineMagnitude[512]));
+    PRINTF("checkpoint sine magnitude after "); print_int(1); PRINTF("\r\n");
+    PRINTF("CPU sine mag[50]="); print_int(scaled_float(s_debugSineMagnitude[50]));
+    PRINTF(" (expected 512000 +/-1%%)\r\n");
+    PRINTF("CPU sine mags bins 49/51/0/512 x1000=");
+    print_int(scaled_float(s_debugSineMagnitude[49])); PRINTF("/");
+    print_int(scaled_float(s_debugSineMagnitude[51])); PRINTF("/");
+    print_int(scaled_float(s_debugSineMagnitude[0])); PRINTF("/");
+    print_int(scaled_float(s_debugSineMagnitude[512])); PRINTF("\r\n");
     cpu_fft_magnitudes(vector0, s_cpuMagnitude);
     PRINTF("Firmware/Numpy window 0 magnitude bins 0..7 x1000:\r\n");
     for (uint32_t bin = 0; bin < 8U; ++bin)
     {
-        PRINTF("  bin %u: %d/%d\r\n", static_cast<unsigned int>(bin),
-               (int)scaled_float(s_cpuMagnitude[bin]),
-               (int)scaled_float(raw_debug_numpy_window0_mag[bin]));
+        PRINTF("  bin %u: ", static_cast<unsigned int>(bin));
+        print_int(scaled_float(s_cpuMagnitude[bin])); PRINTF("/");
+        print_int(scaled_float(raw_debug_numpy_window0_mag[bin])); PRINTF("\r\n");
     }
     PRINTF("Firmware/Numpy sine magnitude bins 49..51 x1000:\r\n");
     for (uint32_t bin = 49U; bin <= 51U; ++bin)
     {
-        PRINTF("  bin %u: %d/%d\r\n", static_cast<unsigned int>(bin),
-               (int)scaled_float(s_debugSineMagnitude[bin]),
-               (int)scaled_float(raw_debug_numpy_sine_mag[bin - 49U]));
+        PRINTF("  bin %u: ", static_cast<unsigned int>(bin));
+        print_int(scaled_float(s_debugSineMagnitude[bin])); PRINTF("/");
+        print_int(scaled_float(raw_debug_numpy_sine_mag[bin - 49U])); PRINTF("\r\n");
     }
     PRINTF("Firmware bins 0..7: mag/log1p/norm x1000, quantized:\r\n");
     for (uint32_t bin = 0; bin < 8U; ++bin)
     {
         float logged = log1pf(s_cpuMagnitude[bin]);
         float normalized = (logged - kMean) / kStd;
-        PRINTF("  bin %u: %d/%d/%d/%d\r\n",
-               static_cast<unsigned int>(bin), (int)scaled_float(s_cpuMagnitude[bin]),
-               (int)scaled_float(logged), (int)scaled_float(normalized),
-               static_cast<int>(static_cast<int8_t>(
-                   quantize_feature(s_cpuMagnitude[bin]))));
+        PRINTF("  bin %u: ", static_cast<unsigned int>(bin));
+        print_int(scaled_float(s_cpuMagnitude[bin])); PRINTF("/");
+        print_int(scaled_float(logged)); PRINTF("/");
+        print_int(scaled_float(normalized)); PRINTF("/");
+        print_int(static_cast<int>(static_cast<int8_t>(
+                   quantize_feature(s_cpuMagnitude[bin])))); PRINTF("\r\n");
     }
 #endif
 }
