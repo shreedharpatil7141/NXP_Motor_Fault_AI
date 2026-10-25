@@ -41,8 +41,10 @@ bool s_initialized = false;
 float s_cpuInput[kWindowSize] __ALIGNED(16);
 float s_cpuOutput[kWindowSize] __ALIGNED(16);
 float s_cpuMagnitude[kFeatureSize] __ALIGNED(16);
+float s_debugSineMagnitude[kFeatureSize] __ALIGNED(16);
 arm_rfft_fast_instance_f32 s_cpuRfft;
 bool s_cpuInitialized = false;
+bool s_firstCpuFftReported = false;
 #endif
 
 #if USE_POWERQUAD
@@ -125,6 +127,7 @@ void initialize_cpu_fft()
         {
         }
     }
+    PRINTF("checkpoint arm_rfft_fast_init_f32 after %d\r\n", (int)1);
     s_cpuInitialized = true;
 }
 
@@ -132,7 +135,16 @@ void cpu_fft_magnitudes(const float *raw1024, float *magnitudes)
 {
     initialize_cpu_fft();
     std::memcpy(s_cpuInput, raw1024, sizeof(s_cpuInput));
+    if (!s_firstCpuFftReported)
+    {
+        PRINTF("checkpoint first arm_rfft_fast_f32 before %d\r\n", (int)1);
+    }
     arm_rfft_fast_f32(&s_cpuRfft, s_cpuInput, s_cpuOutput, 0);
+    if (!s_firstCpuFftReported)
+    {
+        PRINTF("checkpoint first arm_rfft_fast_f32 after %d\r\n", (int)1);
+        s_firstCpuFftReported = true;
+    }
     magnitudes[0] = fabsf(s_cpuOutput[0]);
     magnitudes[kWindowSize / 2U] = fabsf(s_cpuOutput[1]);
     for (uint32_t bin = 1U; bin < kWindowSize / 2U; ++bin)
@@ -262,7 +274,6 @@ extern "C" void preprocess_debug_once(const float *vector0)
 
     configure_powerquad(kPQ_32Bit, 10, 0);
 #else
-    float sineMagnitude[kFeatureSize];
     initialize_cpu_fft();
     PRINTF("\r\n=== preprocess_window CPU FFT debug (one-shot) ===\r\n");
     PRINTF("Vector 0 label: Normal (0)\r\n");
@@ -278,12 +289,16 @@ extern "C" void preprocess_debug_once(const float *vector0)
                                static_cast<float>(index) /
                                static_cast<float>(kWindowSize));
     }
-    cpu_fft_magnitudes(sineWindow, sineMagnitude);
+    PRINTF("checkpoint sine window generation after %d\r\n", (int)1);
+    cpu_fft_magnitudes(sineWindow, s_debugSineMagnitude);
+    PRINTF("checkpoint sine magnitude after %d\r\n", (int)1);
     PRINTF("CPU sine mag[50]=%d (expected 512000 +/-1%%)\r\n",
-           (int)scaled_float(sineMagnitude[50]));
+           (int)scaled_float(s_debugSineMagnitude[50]));
     PRINTF("CPU sine mags bins 49/51/0/512 x1000=%d/%d/%d/%d\r\n",
-           (int)scaled_float(sineMagnitude[49]), (int)scaled_float(sineMagnitude[51]),
-           (int)scaled_float(sineMagnitude[0]), (int)scaled_float(sineMagnitude[512]));
+           (int)scaled_float(s_debugSineMagnitude[49]),
+           (int)scaled_float(s_debugSineMagnitude[51]),
+           (int)scaled_float(s_debugSineMagnitude[0]),
+           (int)scaled_float(s_debugSineMagnitude[512]));
     cpu_fft_magnitudes(vector0, s_cpuMagnitude);
     PRINTF("Firmware/Numpy window 0 magnitude bins 0..7 x1000:\r\n");
     for (uint32_t bin = 0; bin < 8U; ++bin)
@@ -296,7 +311,7 @@ extern "C" void preprocess_debug_once(const float *vector0)
     for (uint32_t bin = 49U; bin <= 51U; ++bin)
     {
         PRINTF("  bin %u: %d/%d\r\n", static_cast<unsigned int>(bin),
-               (int)scaled_float(sineMagnitude[bin]),
+               (int)scaled_float(s_debugSineMagnitude[bin]),
                (int)scaled_float(raw_debug_numpy_sine_mag[bin - 49U]));
     }
     PRINTF("Firmware bins 0..7: mag/log1p/norm x1000, quantized:\r\n");

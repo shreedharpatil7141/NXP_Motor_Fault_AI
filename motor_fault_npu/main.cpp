@@ -11,6 +11,26 @@
 #include <cstdint>
 #include <cstring>
 
+extern "C" void hard_fault_report(uint32_t *stacked);
+
+extern "C" __attribute__((naked)) void HardFault_Handler(void)
+{
+    __asm volatile(
+        "tst lr, #4\n"
+        "ite eq\n"
+        "mrseq r0, msp\n"
+        "mrsne r0, psp\n"
+        "b hard_fault_report\n");
+}
+
+extern "C" void hard_fault_report(uint32_t *stacked)
+{
+    PRINTF("HardFault CFSR=0x%08x HFSR=0x%08x PC=0x%08x LR=0x%08x\r\n",
+           (unsigned int)SCB->CFSR, (unsigned int)SCB->HFSR,
+           (unsigned int)stacked[6], (unsigned int)stacked[5]);
+    while (1) {}
+}
+
 namespace
 {
 constexpr uint32_t kSampleRateHz = 12000U;
@@ -65,8 +85,9 @@ void stream_timer_init()
     matchConfig.outControl = kCTIMER_Output_NoAction;
     matchConfig.outPinInitState = false;
     matchConfig.enableInterrupt = true;
+    PRINTF("checkpoint CTIMER4 interrupt enable before %d\r\n", (int)1);
     CTIMER_SetupMatch(kStreamTimer, kCTIMER_Match_0, &matchConfig);
-    CTIMER_StartTimer(kStreamTimer);
+    PRINTF("checkpoint CTIMER4 interrupt enable after %d\r\n", (int)1);
 }
 
 bool stream_copy_latest_window(float *window)
@@ -146,7 +167,7 @@ int main(void)
     preprocess_debug_once(raw_windows[0]);
     for (uint32_t vectorIndex = 0; vectorIndex < RAW_NUM_WINDOWS; vectorIndex++)
     {
-        int8_t features[RAW_FEATURE_SIZE];
+        static int8_t features[RAW_FEATURE_SIZE];
         uint32_t preprocessStart = TIMER_GetTimeInUS();
         preprocess_window(raw_windows[vectorIndex], features);
         uint32_t preprocessLatency = TIMER_GetTimeInUS() - preprocessStart;
@@ -249,8 +270,8 @@ int main(void)
     PRINTF("\r\n=== Streaming simulation: 12 kHz, 50%% overlap ===\r\n");
     PRINTF("Window period_us=42667 samples_per_window=%d hop=%d\r\n",
            (int)kStreamWindowSize, (int)kStreamHopSize);
-    float streamWindow[kStreamWindowSize] __ALIGNED(16);
-    int8_t streamFeatures[RAW_FEATURE_SIZE];
+    static float streamWindow[kStreamWindowSize] __ALIGNED(16);
+    static int8_t streamFeatures[RAW_FEATURE_SIZE];
     uint32_t streamHistogram[4] = {0, 0, 0, 0};
     uint64_t streamPreprocessTotal = 0;
     uint64_t streamInferenceTotal = 0;
@@ -265,7 +286,13 @@ int main(void)
     uint32_t processedWindows = 0;
     uint32_t streamOverruns = 0;
 
+    PRINTF("checkpoint CTIMER4 init before %d\r\n", (int)1);
     stream_timer_init();
+    PRINTF("checkpoint CTIMER4 init after %d\r\n", (int)1);
+    PRINTF("checkpoint CTIMER4 start before %d\r\n", (int)1);
+    CTIMER_StartTimer(kStreamTimer);
+    PRINTF("checkpoint CTIMER4 start after %d\r\n", (int)1);
+    PRINTF("checkpoint streaming loop entry %d\r\n", (int)1);
     while (processedWindows < kStreamWindowCount)
     {
         if (s_streamProduced < nextWindowEnd)
