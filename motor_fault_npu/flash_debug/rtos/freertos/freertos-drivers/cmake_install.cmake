@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/frdmmcxn947_tflm_cifar10_cm33_core0")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/motor_fault_npu")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,106 +39,106 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/dspi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/dspi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/ecspi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/ecspi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/i2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/i2c/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/ii2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/ii2c/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/iuart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/iuart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpc_i2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpc_i2c/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpc_vspi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpc_vspi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpc_vusart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpc_vusart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpi2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpi2c/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpspi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpspi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpuart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpflexcomm/lpuart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpi2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpi2c/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpsci/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpsci/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpspi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpspi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/lpuart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/lpuart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/smartcard/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/smartcard/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/spi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/spi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/uart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/uart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/flexcomm/usart/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/flexcomm/usart/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/flexcomm/spi/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/flexcomm/spi/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/rtos/freertos/freertos-drivers/flexcomm/i2c/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/rtos/freertos/freertos-drivers/flexcomm/i2c/cmake_install.cmake")
 endif()
 

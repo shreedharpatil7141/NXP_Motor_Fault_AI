@@ -108,6 +108,49 @@ The library files and header files in the `eiq/neutron/` folder are Neutron-Soft
 
 Users can update the Neutron-Software version in this project by replacing these four files in the `eiq/neutron/` folder: `NeutronDriver.h`, `NeutronErrors.h`, `libNeutronDriver.a`, and `libNeutronFirmware.a`.
 
+The Neutron converter version must match the Neutron driver and firmware libraries
+linked by the project. A model converted with a different Neutron SDK can initialize
+successfully but fail at inference with a microcode version mismatch. Replace the
+driver and firmware libraries as a matched set, or reconvert the model with the
+converter from the SDK that supplied the libraries. Do not mix individual files
+from different Neutron SDK releases.
+
+## Raw-window preprocessing validation
+
+Run `src/make_raw_vectors.py` with the project Python environment to regenerate
+`motor_fault_npu/raw_vectors.h`:
+
+```powershell
+C:\NXP_Motor_Fault_AI\.venv\Scripts\python.exe `
+    C:\NXP_Motor_Fault_AI\src\make_raw_vectors.py
+```
+
+The firmware uses the MCXN947 PowerQuad 1024-point real FFT, then applies
+`log1p(abs(rfft))`, the scalar normalization from
+`models/4class_norm_stats.npz`, and the INT8 quantization parameters from the
+INT8 TFLite model. Each raw window reports feature differences against the
+Python-generated `raw_expected_feat` reference. The PowerQuad FFT requires
+fixed-point FFT operation on this SDK, so the firmware uses scaled signed
+32-bit samples and undoes that scale after the transform.
+The generated reference must still be checked on hardware because PowerQuad FFT
+stage scaling is hardware-format dependent.
+
+## Debugging from VS Code
+
+The checked-in launch profile targets the FRDM-MCXN947 through LinkServer. Before
+starting a debug session:
+
+1. Connect the board with its debug USB port and close other sessions using the
+   probe.
+2. In the MCUXpresso **Debug Probes** view, select the detected **LinkServer**
+   probe. The probe serial number is intentionally left empty so the profile
+   remains portable between boards.
+3. Select the `Debug` profile and start debugging.
+
+If the extension reports that the target information does not match the debug
+device, regenerate or edit the profile so the LinkServer device is
+`MCXN947:FRDM-MCXN947`; `CTN730` is not the target device for this project.
+
 **(2) Project Structure in *MCUXpresso for VScode***
 
 Please select the following two options in the ***MCUXpresso for VS Code*** extension settings:

@@ -626,7 +626,6 @@ C:\FRDM\mcuxsdk\mcuxsdk\examples\_common\project_segments\common\Kconfig.prjseg
 C:\FRDM\mcuxsdk\mcuxsdk\examples\_common\project_segments\freertos\examples\tickless\Kconfig.prjseg
 C:\FRDM\mcuxsdk\mcuxsdk\examples\_common\project_segments\lvgl\Kconfig.prjseg
 C:\FRDM\mcuxsdk\mcuxsdk\examples\_common\project_segments\ota_examples\mcxn_boards\Kconfig.prjseg
-C:\FRDM\mcuxsdk\mcuxsdk\examples\eiq_examples\tflm_cifar10\flash_debug\Kconfig\Kconfig.modules
 C:\FRDM\mcuxsdk\mcuxsdk\examples\lvgl_examples\lvgl_sdk\Kconfig
 C:\FRDM\mcuxsdk\mcuxsdk\examples\lvgl_examples\lvgl_sdk\lvgl_support\mcx_flexio\Kconfig.lvgl_support
 C:\FRDM\mcuxsdk\mcuxsdk\middleware\audio_voice\components\Kconfig
@@ -807,3 +806,4 @@ C:\FRDM\mcuxsdk\mcuxsdk\rtos\freertos\freertos-drivers\spi\Kconfig
 C:\FRDM\mcuxsdk\mcuxsdk\rtos\freertos\freertos-drivers\uart\Kconfig
 C:\FRDM\mcuxsdk\mcuxsdk\rtos\freertos\freertos-kernel\Kconfig
 C:\FRDM\mcuxsdk\mcuxsdk\rtos\freertos\freertos-plus-tcp\Kconfig
+C:\NXP_Motor_Fault_AI\motor_fault_npu\flash_debug\Kconfig\Kconfig.modules

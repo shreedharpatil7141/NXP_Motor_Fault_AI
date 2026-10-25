@@ -7,8 +7,8 @@
   "projectType": "sdk-v2-repository",
   "projectName": "frdmmcxn947_tflm_cifar10_cm33_core0",
   "sdk": {
-    "version": "26.6.0",
     "path": "c:\\FRDM\\mcuxsdk",
+    "version": "26.6.0",
     "boardId": "frdmmcxn947",
     "deviceId": "MCXN947",
     "coreId": "cm33_core0"

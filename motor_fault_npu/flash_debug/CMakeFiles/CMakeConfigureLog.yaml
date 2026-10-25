@@ -9,7 +9,7 @@ events:
       - "CMakeLists.txt:5 (project)"
     message: |
       The target system is: Generic -  - 
-      The host system is: Windows - 10.0.26200 - AMD64
+      The host system is: Windows - 10.0.26300 - AMD64
   -
     kind: "message-v1"
     backtrace:
@@ -62,7 +62,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
       
       The C compiler identification is GNU, found in:
-        C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/CMakeFiles/3.30.0/CompilerIdC/CMakeCCompilerId.o
+        C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/CMakeFiles/3.30.0/CompilerIdC/CMakeCCompilerId.o
       
   -
     kind: "message-v1"
@@ -116,7 +116,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
       
       The CXX compiler identification is GNU, found in:
-        C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/CMakeFiles/3.30.0/CompilerIdCXX/CMakeCXXCompilerId.o
+        C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/CMakeFiles/3.30.0/CompilerIdCXX/CMakeCXXCompilerId.o
       
   -
     kind: "message-v1"

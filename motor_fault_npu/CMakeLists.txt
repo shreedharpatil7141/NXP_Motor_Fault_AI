@@ -8,12 +8,16 @@ project(motor_fault_npu
 )
 
 mcux_add_include(
+    BASE_PATH ${SdkRootDirPath}/examples/eiq_examples
+    common
+    common/tflm/model
+)
+
+mcux_add_include(
     INCLUDES .
     pcq_npu
-    ${SdkRootDirPath}/middleware/eiq/neutron/common/include
-    ${SdkRootDirPath}/middleware/eiq/neutron/driver/include
-    ${SdkRootDirPath}/examples/eiq_examples/common/tflm/model
-    ${SdkRootDirPath}/examples/eiq_examples/common
+    neutron/common/include
+    neutron/driver/include
 )
 
 mcux_add_source(
@@ -25,18 +29,35 @@ mcux_add_source(
     examples/eiq_examples/common/tflm/model/model.h
     examples/eiq_examples/common/tflm/demo_info.cpp
     examples/eiq_examples/common/demo_info.h
+    examples/eiq_examples/common/board_init.h
     examples/eiq_examples/common/timer.c
     examples/eiq_examples/common/timer.h
 
-    middleware/eiq/neutron/mcxn/libNeutronFirmware.a
-    middleware/eiq/neutron/mcxn/libNeutronDriver.a
 )
 
 mcux_add_source(
     SOURCES
     main.cpp
+    preprocess.cpp
+    preprocess.h
+    raw_vectors.h
     pcq_npu/model_data.h
     pcq_npu/model_motor_fault_ops_npu.cpp
+    neutron/mcxn/libNeutronFirmware.a
+    neutron/mcxn/libNeutronDriver.a
+)
+
+mcux_add_source(
+    BASE_PATH ${SdkRootDirPath}/arch/arm/CMSIS
+    SOURCES
+    DSP/Source/CommonTables/arm_common_tables.c
+    DSP/Source/CommonTables/arm_const_structs.c
+    DSP/Source/TransformFunctions/arm_bitreversal2.c
+    DSP/Source/TransformFunctions/arm_cfft_f32.c
+    DSP/Source/TransformFunctions/arm_cfft_init_f32.c
+    DSP/Source/TransformFunctions/arm_cfft_radix8_f32.c
+    DSP/Source/TransformFunctions/arm_rfft_fast_f32.c
+    DSP/Source/TransformFunctions/arm_rfft_fast_init_f32.c
 )
 
 include(${SdkRootDirPath}/CMakeLists.txt)
@@ -44,6 +65,57 @@ include(${SdkRootDirPath}/CMakeLists.txt)
 include(
     ${SdkRootDirPath}/${board_root}/${board}/eiq_examples/tflm_cifar10/reconfig.cmake
     OPTIONAL
+)
+
+get_target_property(MOTOR_FAULT_SOURCES ${MCUX_SDK_PROJECT_NAME} SOURCES)
+list(FILTER MOTOR_FAULT_SOURCES EXCLUDE REGEX "model_cifarnet_ops_npu\\.cpp$")
+list(FILTER MOTOR_FAULT_SOURCES EXCLUDE REGEX
+    "middleware/eiq/neutron/mcxn/libNeutron(Driver|Firmware)\\.a$")
+set_property(
+    TARGET ${MCUX_SDK_PROJECT_NAME}
+    PROPERTY SOURCES ${MOTOR_FAULT_SOURCES}
+)
+
+get_target_property(MOTOR_FAULT_LINK_LIBRARIES ${MCUX_SDK_PROJECT_NAME} LINK_LIBRARIES)
+if(MOTOR_FAULT_LINK_LIBRARIES)
+    list(FILTER MOTOR_FAULT_LINK_LIBRARIES EXCLUDE REGEX
+        "middleware/eiq/neutron/mcxn/libNeutron(Driver|Firmware)\\.a$")
+    set_property(
+        TARGET ${MCUX_SDK_PROJECT_NAME}
+        PROPERTY LINK_LIBRARIES ${MOTOR_FAULT_LINK_LIBRARIES}
+    )
+endif()
+
+target_include_directories(
+    ${MCUX_SDK_PROJECT_NAME}
+    PRIVATE
+    ${SdkRootDirPath}/examples/eiq_examples/common
+    ${SdkRootDirPath}/examples/eiq_examples/common/tflm/model
+    ${SdkRootDirPath}/drivers/powerquad
+    ${SdkRootDirPath}/arch/arm/CMSIS/DSP/Include
+)
+
+target_sources(
+    ${MCUX_SDK_PROJECT_NAME}
+    PRIVATE
+    ${SdkRootDirPath}/examples/eiq_examples/common/tflm/model.cpp
+    ${SdkRootDirPath}/examples/eiq_examples/common/timer.c
+    ${SdkRootDirPath}/drivers/powerquad/fsl_powerquad_basic.c
+    ${SdkRootDirPath}/drivers/powerquad/fsl_powerquad_transform.c
+)
+
+target_link_libraries(
+    ${MCUX_SDK_PROJECT_NAME}
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/neutron/mcxn/libNeutronDriver.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/neutron/mcxn/libNeutronFirmware.a
+)
+
+target_compile_definitions(
+    ${MCUX_SDK_PROJECT_NAME}
+    PRIVATE
+    MODEL_INPUT_MEAN=0
+    MODEL_INPUT_STD=1
 )
 
 mcux_convert_binary(

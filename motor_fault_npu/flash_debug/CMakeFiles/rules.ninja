@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: frdmmcxn947_tflm_cifar10_cm33_core0
+# Project: motor_fault_npu
 # Configurations: flash_debug
 # =============================================================================
 # =============================================================================
@@ -14,7 +14,7 @@
 #############################################
 # Rule for compiling ASM files.
 
-rule ASM_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flash_debug
+rule ASM_COMPILER__motor_fault_npu_cm33_core0_unscanned_flash_debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}C:\Users\SHREED~1\MCUXPR~3\ARM-GN~1.REL\bin\AR19DD~1.EXE $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule ASM_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flas
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flash_debug
+rule C_COMPILER__motor_fault_npu_cm33_core0_unscanned_flash_debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}C:\Users\SHREED~1\MCUXPR~3\ARM-GN~1.REL\bin\AR19DD~1.EXE $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -34,7 +34,7 @@ rule C_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flash_
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flash_debug
+rule CXX_COMPILER__motor_fault_npu_cm33_core0_unscanned_flash_debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}C:\Users\SHREED~1\MCUXPR~3\ARM-GN~1.REL\bin\AR10B2~1.EXE $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -44,7 +44,7 @@ rule CXX_COMPILER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_unscanned_flas
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__frdmmcxn947_tflm_cifar10_cm33_core0_cm33_core0_flash_debug
+rule CXX_EXECUTABLE_LINKER__motor_fault_npu_cm33_core0_flash_debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Users\SHREED~1\MCUXPR~3\ARM-GN~1.REL\bin\AR10B2~1.EXE $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -62,7 +62,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Users\Shreedhargouda Patil\.mcuxpressotools\cmake-3.30.0-windows-x86_64\bin\cmake.exe" --regenerate-during-build -SC:\FRDM\mcuxsdk\mcuxsdk\examples\eiq_examples\tflm_cifar10 -BC:\FRDM\mcuxsdk\mcuxsdk\examples\eiq_examples\tflm_cifar10\flash_debug
+  command = "C:\Users\Shreedhargouda Patil\.mcuxpressotools\cmake-3.30.0-windows-x86_64\bin\cmake.exe" --regenerate-during-build -SC:\NXP_Motor_Fault_AI\motor_fault_npu -BC:\NXP_Motor_Fault_AI\motor_fault_npu\flash_debug
   description = Re-running CMake...
   generator = 1
 

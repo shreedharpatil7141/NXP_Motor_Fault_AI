@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/frdmmcxn947_tflm_cifar10_cm33_core0")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/motor_fault_npu")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,16 +39,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/middleware/wireless/framework/zephyr/lib/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/middleware/wireless/framework/zephyr/lib/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/middleware/wireless/framework/zephyr/port/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/middleware/wireless/framework/zephyr/port/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/FRDM/mcuxsdk/mcuxsdk/examples/eiq_examples/tflm_cifar10/flash_debug/middleware/wireless/framework/zephyr/subsys/cmake_install.cmake")
+  include("C:/NXP_Motor_Fault_AI/motor_fault_npu/flash_debug/middleware/wireless/framework/zephyr/subsys/cmake_install.cmake")
 endif()
 

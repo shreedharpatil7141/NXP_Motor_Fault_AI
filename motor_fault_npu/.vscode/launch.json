@@ -6,9 +6,10 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "executable": {
-        "elf": ""
+        "elf": "${workspaceFolder}/flash_debug/motor_fault_npu_cm33_core0.elf"
       },
       "stopAtSymbol": "main",
+      "probeType": "LinkServer",
       "probeSerialNumber": "",
       "isAttach": false,
       "skipBuildBeforeDebug": false,
@@ -18,7 +19,9 @@
         "set non-stop off"
       ],
       "gdbServerConfigs": {
-        "linkserver": {},
+        "linkserver": {
+          "device": "MCXN947:FRDM-MCXN947"
+        },
         "segger": {},
         "pemicro": {}
       },
