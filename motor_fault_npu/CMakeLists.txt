@@ -38,6 +38,8 @@ mcux_add_source(
 mcux_add_source(
     SOURCES
     main.cpp
+    alert.cpp
+    alert.h
     preprocess.cpp
     preprocess.h
     raw_vectors.h

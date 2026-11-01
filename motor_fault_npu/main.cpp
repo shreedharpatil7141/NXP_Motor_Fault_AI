@@ -1,4 +1,5 @@
 #include "board_init.h"
+#include "alert.h"
 #include "fsl_clock.h"
 #include "fsl_ctimer.h"
 #include "fsl_debug_console.h"
@@ -154,6 +155,18 @@ struct stream_window_result_t
 
 static stream_window_result_t
     s_streamResults[kStreamWindowCount];
+
+struct alert_transition_t
+{
+    uint32_t windowIndex;
+    alert_state_t from;
+    alert_state_t to;
+    int predictedClass;
+    int confidenceX1000;
+};
+
+static alert_transition_t s_alertTransitions[64];
+static uint32_t s_alertTransitionCount = 0U;
 }
 
 int main(void)
@@ -318,6 +331,7 @@ int main(void)
            static_cast<unsigned int>(inferenceMax));
 
     PRINTF("\r\n=== Streaming simulation: 12 kHz, 50%% overlap ===\r\n");
+    alert_init();
     PRINTF("Window period_us=42667 samples_per_window=%u hop=%u\r\n",
            static_cast<unsigned int>(kStreamWindowSize),
            static_cast<unsigned int>(kStreamHopSize));
@@ -392,6 +406,19 @@ int main(void)
                 predicted = outputIndex;
             }
         }
+        const float confidence =
+            (static_cast<int>(output[predicted]) + 128) / 256.0f;
+        const alert_state_t previousAlertState =
+            s_alertTransitionCount == 0U ? ALERT_STATE_NORMAL
+                                         : s_alertTransitions[s_alertTransitionCount - 1U].to;
+        const alert_state_t alertState = alert_update(predicted, confidence);
+        if (alertState != previousAlertState &&
+            s_alertTransitionCount < 64U)
+        {
+            s_alertTransitions[s_alertTransitionCount++] = {
+                processedWindows, previousAlertState, alertState, predicted,
+                static_cast<int>(confidence * 1000.0f)};
+        }
         uint32_t occupancy = s_streamProduced - s_streamOldest;
         bool overrun = s_streamIsrTicks >= nextWindowEnd + kStreamHopSize;
         s_streamResults[processedWindows] = {
@@ -462,6 +489,36 @@ int main(void)
     PRINTF("\r\n");
     PRINTF("Streaming period_us=42667 CPU_load_percent_x1000=");
     print_int((int)cpuLoadPermille); PRINTF("\r\n");
+    uint32_t alertStateTotals[3] = {0U, 0U, 0U};
+    for (uint32_t index = 0; index < processedWindows; ++index)
+    {
+        alert_state_t state = ALERT_STATE_NORMAL;
+        for (uint32_t transition = 0; transition < s_alertTransitionCount;
+             ++transition)
+        {
+            if (s_alertTransitions[transition].windowIndex > index)
+            {
+                break;
+            }
+            state = s_alertTransitions[transition].to;
+        }
+        alertStateTotals[state]++;
+    }
+    PRINTF("Alert transitions:\r\n");
+    for (uint32_t index = 0; index < s_alertTransitionCount; ++index)
+    {
+        const alert_transition_t &transition = s_alertTransitions[index];
+        PRINTF("  window "); print_int((int)transition.windowIndex);
+        PRINTF(" from="); print_int((int)transition.from);
+        PRINTF(" to="); print_int((int)transition.to);
+        PRINTF(" class="); print_int(transition.predictedClass);
+        PRINTF(" conf_x1000="); print_int(transition.confidenceX1000);
+        PRINTF("\r\n");
+    }
+    PRINTF("Alert state totals: NORMAL="); print_int((int)alertStateTotals[ALERT_STATE_NORMAL]);
+    PRINTF(" FAULT_ALERT="); print_int((int)alertStateTotals[ALERT_STATE_FAULT_ALERT]);
+    PRINTF(" LOW_CONFIDENCE="); print_int((int)alertStateTotals[ALERT_STATE_LOW_CONFIDENCE]);
+    PRINTF("\r\n");
     for (uint32_t index = 0; index < processedWindows; ++index)
     {
         stream_window_result_t &result = s_streamResults[index];
